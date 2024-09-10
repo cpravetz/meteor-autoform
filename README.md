@@ -128,7 +128,7 @@ $ npm i --save simpl-schema
 And then also extend SimpleSchema to allow the `autoform` option in your schemas, if you plan to use it:
 
 ```
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 SimpleSchema.extendOptions(['autoform']);
 ```
 

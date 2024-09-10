@@ -12,7 +12,7 @@ Npm.depends({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('METEOR@1.3')
+  api.versionsFrom('3.0')
 
   // Dependencies
   api.use(
@@ -27,8 +27,7 @@ Package.onUse(function (api) {
       'reactive-dict',
       'random',
       'ecmascript',
-      'mongo',
-      'momentjs:moment@2.10.6'
+      'mongo'
     ],
     'client'
   )
@@ -37,9 +36,10 @@ Package.onUse(function (api) {
 
   api.use(
     [
-      'mrt:moment-timezone@0.2.1',
-      'aldeed:collection2@3.0.0 || 4.0.0',
-      'aldeed:moment-timezone@0.4.0',
+      'momentjs:moment',
+      'mrt:moment-timezone',
+      'aldeed:collection2',
+      'aldeed:moment-timezone',
       'reload'
     ],
     'client',
