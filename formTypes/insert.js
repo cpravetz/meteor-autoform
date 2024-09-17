@@ -22,13 +22,13 @@ AutoForm.addFormType('insert', {
       // Perform insert
       if (collectionHasSchema) {
         // If the collection2 pkg is used and a schema is attached, we pass a validationContext
-        collection.insert(doc, ctx.validationOptions, ctx.result)
+        collection.insertAsync(doc, ctx.validationOptions, ctx.result)
       }
       else {
         // If the collection2 pkg is not used or no schema is attached, we don't pass options
         // because core Meteor's `insert` function does not accept
         // an options argument.
-        collection.insert(doc, ctx.result)
+        collection.insertAsync(doc, ctx.result)
       }
     })
   },

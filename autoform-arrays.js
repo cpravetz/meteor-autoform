@@ -94,7 +94,7 @@ ArrayTracker.prototype.initField = function atInitField (
       overrideMaxCount
     )
     loopArray.push(loopCtx)
-    collection.insert(loopCtx)
+    collection.insertAsync(loopCtx)
   }
 
   self.info[formId][field].collection = collection
@@ -117,7 +117,7 @@ ArrayTracker.prototype.resetField = function atResetField (formId, field) {
   }
 
   if (self.info[formId][field].collection) {
-    self.info[formId][field].collection.remove({})
+    self.info[formId][field].collection.removeAsync({})
   }
 
   self.info[formId][field].array = null
@@ -138,7 +138,7 @@ ArrayTracker.prototype.untrackForm = function atUntrackForm (formId) {
   if (self.info[formId]) {
     Object.keys(self.info[formId]).forEach((field) => {
       if (self.info[formId][field].collection) {
-        self.info[formId][field].collection.remove({})
+        self.info[formId][field].collection.removeAsync({})
       }
     })
   }
@@ -243,7 +243,7 @@ ArrayTracker.prototype.addOneToField = function atAddOneToField (
       overrideMaxCount
     )
 
-    self.info[formId][field].collection.insert(loopCtx)
+    self.info[formId][field].collection.insertAsync(loopCtx)
     self.info[formId][field].array.push(loopCtx)
     self.info[formId][field].count++
     self.info[formId][field].visibleCount++
@@ -271,7 +271,7 @@ ArrayTracker.prototype.removeFromFieldAtIndex = function atRemoveFromFieldAtInde
     .minCount
 
   if (currentCount > minCount) {
-    self.info[formId][field].collection.update(
+    self.info[formId][field].collection.updateAsync(
       { index: index },
       { $set: { removed: true } }
     )

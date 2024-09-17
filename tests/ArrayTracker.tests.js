@@ -111,10 +111,10 @@ describe('ArrayTracker', function () {
       arrayTracker.initField(formId, field, schema, docCount)
 
       const trackedField = arrayTracker.info[formId][field]
-      expect(trackedField.collection.find().count()).to.equal(docCount)
+      expect(trackedField.collection.find().countAsync()).to.equal(docCount)
       expect(trackedField.array.length).to.equal(docCount)
 
-      const firstDoc = trackedField.collection.findOne()
+      const firstDoc = trackedField.collection.findOneAsync()
       expect(firstDoc.formId).to.equal(formId)
       expect(firstDoc.arrayFieldName).to.equal(field)
       expect(firstDoc.index).to.equal(0)
@@ -153,7 +153,7 @@ describe('ArrayTracker', function () {
       arrayTracker.info[formId][field].deps.changed()
 
       Tracker.autorun(() => {
-        const currentCount = arrayTracker.getCount(formId, field)
+        const currentCount = arrayTracker.getcountAsync(formId, field)
         if (currentCount === 0) {
           done()
         }
@@ -178,9 +178,9 @@ describe('ArrayTracker', function () {
   describe('untrackForm', function () {
     it('removes any tracking info for a given form', function () {
       const collection = new Mongo.Collection(null)
-      collection.insert({})
-      collection.insert({})
-      collection.insert({})
+      collection.insertAsync({})
+      collection.insertAsync({})
+      collection.insertAsync({})
 
       arrayTracker.info[formId] = {}
       arrayTracker.info[formId][field] = {
@@ -192,7 +192,7 @@ describe('ArrayTracker', function () {
       }
       arrayTracker.untrackForm(formId)
       expect(arrayTracker.info[formId]).to.deep.equal({})
-      expect(collection.find().count()).to.equal(0)
+      expect(collection.find().countAsync()).to.equal(0)
     })
   })
   describe('tracksField', function () {
@@ -222,7 +222,7 @@ describe('ArrayTracker', function () {
   describe('getField', function () {
     it('returns the current field entries', function () {
       const collection = new Mongo.Collection(null)
-      collection.insert({ formId, field })
+      collection.insertAsync({ formId, field })
 
       arrayTracker.info[formId] = {}
       arrayTracker.info[formId][field] = {
@@ -231,9 +231,9 @@ describe('ArrayTracker', function () {
       }
 
       const cursor = arrayTracker.getField(formId, field)
-      expect(cursor.count()).to.equal(1)
+      expect(cursor.countAsync()).to.equal(1)
 
-      const doc = collection.findOne()
+      const doc = collection.findOneAsync()
       expect(cursor.fetch()).to.deep.equal([doc])
     })
     it('runs reactively', function (done) {
@@ -255,7 +255,7 @@ describe('ArrayTracker', function () {
         }
       })
 
-      collection.insert({ formId, field })
+      collection.insertAsync({ formId, field })
       arrayTracker.info[formId][field].deps.changed()
     })
   })
@@ -267,7 +267,7 @@ describe('ArrayTracker', function () {
         deps: new Tracker.Dependency()
       }
 
-      expect(arrayTracker.getCount(formId, field)).to.equal(123)
+      expect(arrayTracker.getcountAsync(formId, field)).to.equal(123)
     })
     it('runs reactively', function (done) {
       arrayTracker.info[formId] = {}
@@ -277,7 +277,7 @@ describe('ArrayTracker', function () {
       }
 
       Tracker.autorun(() => {
-        const count = arrayTracker.getCount(formId, field)
+        const count = arrayTracker.getcountAsync(formId, field)
         if (count === -1) {
           done()
         }
@@ -429,12 +429,12 @@ describe('ArrayTracker', function () {
         collection: collection
       }
 
-      collection.insert(arrayTracker.info[formId][field].array[0])
+      collection.insertAsync(arrayTracker.info[formId][field].array[0])
 
       // ignore if maxCount is reached
       stub(ArrayTracker.prototype, 'getMinMax', () => ({ maxCount: 1 }))
       arrayTracker.addOneToField(formId, field)
-      expect(arrayTracker.info[formId][field].collection.find().count()).to.equal(1)
+      expect(arrayTracker.info[formId][field].collection.find().countAsync()).to.equal(1)
       expect(arrayTracker.info[formId][field].array.length).to.equal(1)
       expect(arrayTracker.info[formId][field].count).to.equal(1)
       expect(arrayTracker.info[formId][field].visibleCount).to.equal(1)
@@ -445,7 +445,7 @@ describe('ArrayTracker', function () {
       stub(AutoForm, 'resetValueCache', () => {})
 
       arrayTracker.addOneToField(formId, field)
-      expect(arrayTracker.info[formId][field].collection.find().count()).to.equal(2)
+      expect(arrayTracker.info[formId][field].collection.find().countAsync()).to.equal(2)
       expect(arrayTracker.info[formId][field].array.length).to.equal(2)
       expect(arrayTracker.info[formId][field].count).to.equal(2)
       expect(arrayTracker.info[formId][field].visibleCount).to.equal(2)
@@ -477,7 +477,7 @@ describe('ArrayTracker', function () {
       }
 
       Tracker.autorun(() => {
-        if (arrayTracker.getCount(formId, field) === 2) {
+        if (arrayTracker.getcountAsync(formId, field) === 2) {
           done()
         }
       })
@@ -522,14 +522,14 @@ describe('ArrayTracker', function () {
         collection: collection
       }
 
-      collection.insert(arrayTracker.info[formId][field].array[0])
-      collection.insert(arrayTracker.info[formId][field].array[1])
+      collection.insertAsync(arrayTracker.info[formId][field].array[0])
+      collection.insertAsync(arrayTracker.info[formId][field].array[1])
 
       // ignore if min count is reached
       stub(ArrayTracker.prototype, 'getMinMax', () => ({ minCount: 2 }))
       arrayTracker.removeFromFieldAtIndex(formId, field, 1)
 
-      expect(arrayTracker.info[formId][field].collection.find().count()).to.equal(2)
+      expect(arrayTracker.info[formId][field].collection.find().countAsync()).to.equal(2)
       expect(arrayTracker.info[formId][field].array.length).to.equal(2)
       expect(arrayTracker.info[formId][field].count).to.equal(2)
       expect(arrayTracker.info[formId][field].visibleCount).to.equal(2)
@@ -541,14 +541,14 @@ describe('ArrayTracker', function () {
       stub(AutoForm, 'resetValueCache', () => {})
 
       arrayTracker.removeFromFieldAtIndex(formId, field, 1)
-      expect(arrayTracker.info[formId][field].collection.find().count()).to.equal(2)
+      expect(arrayTracker.info[formId][field].collection.find().countAsync()).to.equal(2)
       expect(arrayTracker.info[formId][field].array.length).to.equal(2)
       expect(arrayTracker.info[formId][field].count).to.equal(1)
       expect(arrayTracker.info[formId][field].visibleCount).to.equal(1)
 
       expect(arrayTracker.info[formId][field].array[1].removed).to.equal(true)
 
-      const doc = collection.findOne({ index: 1 })
+      const doc = collection.findOneAsync({ index: 1 })
       expect(doc.removed).to.equal(true)
     })
     it('runs reactively', function (done) {
@@ -576,8 +576,8 @@ describe('ArrayTracker', function () {
         collection: collection
       }
 
-      Tracker.autorun(() => {
-        if (arrayTracker.getCount(formId, field) === 1) {
+      Tracker.autorun(async function() {
+        if (await arrayTracker.getcountAsync(formId, field) === 1) {
           done()
         }
       })

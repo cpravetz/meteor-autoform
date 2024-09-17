@@ -21,7 +21,7 @@ AutoForm.addFormType('update', {
       }
       else {
         // Perform update
-        collection.update({ _id: ctx.docId }, modifier, ctx.validationOptions, ctx.result)
+        collection.updateAsync({ _id: ctx.docId }, modifier, ctx.validationOptions, ctx.result)
       }
     })
   },

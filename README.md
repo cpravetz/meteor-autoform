@@ -535,7 +535,7 @@ element, so it must be unique within your entire application. It's required
 because we use it to set up a form-specific validation context and to preserve
 input values when a "hot code push" happens.
 * `doc`: Required for an update form, and must have at least an `_id` property. Pass the current document
-object, retrieved with a call to `findOne()` for example. For an insert form,
+object, retrieved with a call to `findOneAsync()` for example. For an insert form,
 you can also use this attribute to pass an object that has default form values
 set (the same effect as setting a `value` attribute on each field within the form).
 * `validation`: Optional. See the "Fine Tuning Validation" section.
@@ -912,7 +912,7 @@ AutoForm.hooks({
 
 The arguments passed to your `onSubmit` hook are as follows:
 
-* `insertDoc`: The form input values in a document, suitable for use with insert().
+* `insertDoc`: The form input values in a document, suitable for use with insertAsync().
 This object has been cleaned and validated, but auto values and default values
 have not been added to it.
 * `updateDoc`: The form input values in a modifier, suitable for use with update().

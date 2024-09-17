@@ -29,7 +29,7 @@ AutoForm.addFormType('update-pushArray', {
         const modifer = { $push: {} }
         modifer.$push[scope] = doc
         // Perform update
-        collection.update({ _id: ctx.docId }, modifer, ctx.validationOptions, ctx.result)
+        collection.updateAsync({ _id: ctx.docId }, modifer, ctx.validationOptions, ctx.result)
       }
     })
   },
